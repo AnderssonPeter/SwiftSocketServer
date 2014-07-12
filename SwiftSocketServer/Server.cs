@@ -13,6 +13,7 @@ namespace SwiftSocketServer
         BufferManager bufferManager;
         ObjectPool<Socket> socketPool;
         ObjectPool<SocketAwaitable> socketAsyncEventArgsPool;
+        ObjectPool<Connection> connectionPool;
         Socket listeningSocket;
         Task listeningTask;
 
@@ -71,10 +72,54 @@ namespace SwiftSocketServer
 
     public class Connection 
     {
+        internal SocketAwaitable socket;
+
     }
 
-    public interface IServerInterface<ConnectionType> where ConnectionType : Connection, new()
+    public class INetworkStack<TOutput>
     {
-        Task NewConnection(ConnectionType connection);
+        private readonly INetworkLayer[] middleLayers;
+
+        public INetworkLowerLayer<Packet> NetworkServer
+        { get; private set; }
+
+        public INetworkLayer<TOutput> LogicServer
+        { get; private set; }
+
+        public void Reset()
+        {
+            foreach (INetworkLayer middleLayer in middleLayers)
+                middleLayer.Reset();
+        }
+    }
+
+    public class BinaryPacket
+    {
+        ArraySegment<byte> Buffer
+        { get; set; }
+
+        public int Count
+        { get; set; }
+    }
+
+    public class IncommingPacket<TConnection, TPacket> where TConnection : Connection
+    {
+        public TConnection Connection
+        { get; set; }
+
+        public TPacket Packet
+        { get; set; }
+    }
+
+    public interface INetworkLayer<TConnection> where TConnection : Connection
+    {
+        Task Close(TConnection connection);
+        Task<TConnection> AcceptConnectionAsync();
+    }
+
+    public interface INetworkLayer<TConnection, TOutgoing, TIncomming> : INetworkLayer<TConnection>
+    {
+        Task SendAsync(TOutgoing packet, TConnection connection);
+        Task<IncommingPacket<TConnection, TIncomming>> ReciveAsync();
     }
 }
