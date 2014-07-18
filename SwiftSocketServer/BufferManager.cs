@@ -57,7 +57,7 @@ namespace SwiftSocketServer
                         }
                     }
                 }
-                fragment = new ArraySegment<byte>();
+                fragment = default(ArraySegment<byte>);
                 return false;
             }
 
@@ -87,9 +87,10 @@ namespace SwiftSocketServer
         {
             this.blockSize = blockSize;
             this.blockCountPerBuffer = blockCountPerBuffer;
+            buffers.Add(new Buffer(blockSize, blockCountPerBuffer));
         }
 
-        public ArraySegment<byte> GetFragment(int minimumSize)
+        public ArraySegment<byte> CheckoutFragment(int minimumSize)
         {
             if (minimumSize > blockSize * blockCountPerBuffer)
                 throw new ArgumentOutOfRangeException("minimumSize", "to large for buffer");
@@ -111,7 +112,7 @@ namespace SwiftSocketServer
             return value;
         }
 
-        public void PutFragment(ArraySegment<byte> fragment)
+        public void CheckinFragment(ArraySegment<byte> fragment)
         {
             lock (locker)
             {

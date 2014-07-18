@@ -16,7 +16,7 @@ namespace SwiftSocketServer.Test
             var buffer = new BufferManager(blockSize, blockCount);
             for (int i = 0; i < blockCount * 3; i++)
             {
-                fragment = buffer.GetFragment(blockSize * (i % 3) + 1);
+                fragment = buffer.CheckoutFragment(blockSize * (i % 3) + 1);
             }
         }
 
@@ -28,9 +28,9 @@ namespace SwiftSocketServer.Test
             ArraySegment<byte>[] fragments = new ArraySegment<byte>[3];
             var buffer = new BufferManager(blockSize, blockCount);
 
-            fragments[0] = buffer.GetFragment(blockSize);
-            fragments[1] = buffer.GetFragment(blockSize * 2);
-            fragments[2] = buffer.GetFragment(blockSize * 3);
+            fragments[0] = buffer.CheckoutFragment(blockSize);
+            fragments[1] = buffer.CheckoutFragment(blockSize * 2);
+            fragments[2] = buffer.CheckoutFragment(blockSize * 3);
 
         }
 
@@ -42,13 +42,13 @@ namespace SwiftSocketServer.Test
             ArraySegment<byte>[] fragments = new ArraySegment<byte>[3];
             var buffer = new BufferManager(blockSize, blockCount);
 
-            fragments[0] = buffer.GetFragment(blockSize);
-            fragments[1] = buffer.GetFragment(blockSize * 2);
-            fragments[2] = buffer.GetFragment(blockSize * 3);
+            fragments[0] = buffer.CheckoutFragment(blockSize);
+            fragments[1] = buffer.CheckoutFragment(blockSize * 2);
+            fragments[2] = buffer.CheckoutFragment(blockSize * 3);
 
-            buffer.PutFragment(fragments[1]);
+            buffer.CheckinFragment(fragments[1]);
 
-            fragments[1] = buffer.GetFragment(blockSize * 2 + 1);
+            fragments[1] = buffer.CheckoutFragment(blockSize * 2 + 1);
         }
     }
 }

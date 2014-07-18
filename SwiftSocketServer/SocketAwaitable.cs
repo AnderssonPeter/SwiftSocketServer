@@ -11,46 +11,38 @@ namespace SwiftSocketServer
 {
     public sealed class SocketAwaitable : INotifyCompletion
     {
-        private readonly static Action SENTINEL = () => { };
+        private readonly static Action Sentinel = () => { };
 
-        internal bool wasCompleted;
-        internal Action continuation;
-        readonly SocketAsyncEventArgs eventArgs;
+        public bool WasCompleted;
+        public Action Continuation;
+        public readonly SocketAsyncEventArgs EventArgs;
 
         public SocketAwaitable()
         {
-            this.eventArgs = new SocketAsyncEventArgs();
-            eventArgs.Completed += delegate
+            EventArgs = new SocketAsyncEventArgs();
+            EventArgs.Completed += delegate
             {
-                var prev = continuation ?? Interlocked.CompareExchange(
-                    ref continuation, SENTINEL, null);
+                var prev = Continuation ?? Interlocked.CompareExchange(
+                    ref Continuation, Sentinel, null);
                 if (prev != null) prev();
             };
         }
 
-        public SocketAsyncEventArgs EventArgs
-        {
-            get
-            {
-                return eventArgs;
-            }
-        }
-
         internal void Reset()
         {
-            wasCompleted = false;
-            continuation = null;
+            WasCompleted = false;
+            Continuation = null;
         }
 
         public SocketAwaitable GetAwaiter() { return this; }
 
-        public bool IsCompleted { get { return wasCompleted; } }
+        public bool IsCompleted { get { return WasCompleted; } }
 
         public void OnCompleted(Action continuation)
         {
-            if (continuation == SENTINEL ||
+            if (this.Continuation == Sentinel ||
                 Interlocked.CompareExchange(
-                    ref continuation, continuation, null) == SENTINEL)
+                    ref this.Continuation, continuation, null) == Sentinel)
             {
                 Task.Run(continuation);
             }
@@ -58,8 +50,8 @@ namespace SwiftSocketServer
 
         public void GetResult()
         {
-            if (eventArgs.SocketError != SocketError.Success)
-                throw new SocketException((int)eventArgs.SocketError);
+            if (EventArgs.SocketError != SocketError.Success)
+                throw new SocketException((int)EventArgs.SocketError);
         }
     }
 }

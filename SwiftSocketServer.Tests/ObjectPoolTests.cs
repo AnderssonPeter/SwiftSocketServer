@@ -11,11 +11,11 @@ namespace SwiftSocketServer.Test
         public void GetObjectTest()
         {
             const int count = 10;
-            ObjectPool<TestItem> objectPool = new ObjectPool<TestItem>(() => new TestItem(), (t) => t.CheckOutTime = DateTime.Now, count / 2);
+            ObjectPool<TestItem> objectPool = new ObjectPool<TestItem>(() => new TestItem(), (t) => t.CheckOutTime = DateTime.Now, (t) => t.CheckOutTime = null, count / 2);
             TestItem[] ti = new TestItem[count];
             for(int i = 0; i < count; i++)
             {
-                ti[i] = objectPool.GetObject();
+                ti[i] = objectPool.Checkout();
                 Assert.IsNotNull(ti[i]);
             }
         }
@@ -24,16 +24,16 @@ namespace SwiftSocketServer.Test
         public void PutObjectTest()
         {
             const int count = 10;
-            ObjectPool<TestItem> objectPool = new ObjectPool<TestItem>(() => new TestItem(), (t) => t.CheckOutTime = DateTime.Now, count / 2);
+            ObjectPool<TestItem> objectPool = new ObjectPool<TestItem>(() => new TestItem(), (t) => t.CheckOutTime = DateTime.Now, (t) => t.CheckOutTime = null, count / 2);
             TestItem[] ti = new TestItem[count];
             for (int i = 0; i < count; i++)
             {
-                ti[i] = objectPool.GetObject();
+                ti[i] = objectPool.Checkout();
                 Assert.IsNotNull(ti[i]);
             }
             for (int i = 0; i < count; i++)
             {
-                objectPool.PutObject(ti[i]);
+                objectPool.Checkin(ti[i]);
                 ti[i] = null;
             }
         }
@@ -42,7 +42,7 @@ namespace SwiftSocketServer.Test
         {
             public static int counter;
             public readonly int Id = Interlocked.Increment(ref counter);
-            public DateTime CheckOutTime;
+            public DateTime? CheckOutTime;
 
             public TestItem()
             {

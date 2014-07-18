@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSocketServer", "SwiftSocketServer\SwiftSocketServer.csproj", "{78192063-4B99-43B3-922F-1356E8EC7D9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSocketServer.Tests", "SwiftSocketServer.Tests\SwiftSocketServer.Tests.csproj", "{6DF519EC-9586-47D1-B1A8-619AE07A663D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSocketServer.TestConsole", "SwiftSocketServer.TestConsole\SwiftSocketServer.TestConsole.csproj", "{053E7F0F-E6AC-4CDE-8B93-042A973B162C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,10 @@ Global
 		{6DF519EC-9586-47D1-B1A8-619AE07A663D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DF519EC-9586-47D1-B1A8-619AE07A663D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DF519EC-9586-47D1-B1A8-619AE07A663D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{053E7F0F-E6AC-4CDE-8B93-042A973B162C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053E7F0F-E6AC-4CDE-8B93-042A973B162C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053E7F0F-E6AC-4CDE-8B93-042A973B162C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053E7F0F-E6AC-4CDE-8B93-042A973B162C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
